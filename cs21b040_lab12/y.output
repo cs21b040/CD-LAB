@@ -1,0 +1,546 @@
+   0  $accept : CODE $end
+
+   1  CODE : STLIST
+
+   2  STLIST : ST STLIST
+   3         |
+
+   4  ST : FOR LEFT VAR ASSIGN E SEMI BLIST SEMI VAR ASSIGN E RIGHT LCURL STLIST RCURL
+   5     | VAR ASSIGN E SEMI
+
+   6  E : E PLUS T
+   7    | E MINUS T
+   8    | T
+
+   9  T : T STAR F
+  10    | T DIV F
+  11    | F
+
+  12  F : LEFT E RIGHT
+  13    | INT_VAL
+  14    | VAR
+  15    | FLOAT_VAL
+
+  16  BLIST : BLIST OR BLIST
+  17        | BLIST AND BLIST
+  18        | B
+
+  19  B : E RELOP E
+
+state 0
+	$accept : . CODE $end  (0)
+	STLIST : .  (3)
+
+	FOR  shift 1
+	VAR  shift 2
+	$end  reduce 3
+
+	CODE  goto 3
+	STLIST  goto 4
+	ST  goto 5
+
+
+state 1
+	ST : FOR . LEFT VAR ASSIGN E SEMI BLIST SEMI VAR ASSIGN E RIGHT LCURL STLIST RCURL  (4)
+
+	LEFT  shift 6
+	.  error
+
+
+state 2
+	ST : VAR . ASSIGN E SEMI  (5)
+
+	ASSIGN  shift 7
+	.  error
+
+
+state 3
+	$accept : CODE . $end  (0)
+
+	$end  accept
+
+
+state 4
+	CODE : STLIST .  (1)
+
+	.  reduce 1
+
+
+state 5
+	STLIST : ST . STLIST  (2)
+	STLIST : .  (3)
+
+	FOR  shift 1
+	VAR  shift 2
+	$end  reduce 3
+	RCURL  reduce 3
+
+	STLIST  goto 8
+	ST  goto 5
+
+
+state 6
+	ST : FOR LEFT . VAR ASSIGN E SEMI BLIST SEMI VAR ASSIGN E RIGHT LCURL STLIST RCURL  (4)
+
+	VAR  shift 9
+	.  error
+
+
+state 7
+	ST : VAR ASSIGN . E SEMI  (5)
+
+	VAR  shift 10
+	FLOAT_VAL  shift 11
+	INT_VAL  shift 12
+	LEFT  shift 13
+	.  error
+
+	E  goto 14
+	T  goto 15
+	F  goto 16
+
+
+state 8
+	STLIST : ST STLIST .  (2)
+
+	.  reduce 2
+
+
+state 9
+	ST : FOR LEFT VAR . ASSIGN E SEMI BLIST SEMI VAR ASSIGN E RIGHT LCURL STLIST RCURL  (4)
+
+	ASSIGN  shift 17
+	.  error
+
+
+state 10
+	F : VAR .  (14)
+
+	.  reduce 14
+
+
+state 11
+	F : FLOAT_VAL .  (15)
+
+	.  reduce 15
+
+
+state 12
+	F : INT_VAL .  (13)
+
+	.  reduce 13
+
+
+state 13
+	F : LEFT . E RIGHT  (12)
+
+	VAR  shift 10
+	FLOAT_VAL  shift 11
+	INT_VAL  shift 12
+	LEFT  shift 13
+	.  error
+
+	E  goto 18
+	T  goto 15
+	F  goto 16
+
+
+state 14
+	ST : VAR ASSIGN E . SEMI  (5)
+	E : E . PLUS T  (6)
+	E : E . MINUS T  (7)
+
+	PLUS  shift 19
+	MINUS  shift 20
+	SEMI  shift 21
+	.  error
+
+
+state 15
+	E : T .  (8)
+	T : T . STAR F  (9)
+	T : T . DIV F  (10)
+
+	STAR  shift 22
+	DIV  shift 23
+	RELOP  reduce 8
+	PLUS  reduce 8
+	MINUS  reduce 8
+	OR  reduce 8
+	AND  reduce 8
+	SEMI  reduce 8
+	RIGHT  reduce 8
+
+
+state 16
+	T : F .  (11)
+
+	.  reduce 11
+
+
+state 17
+	ST : FOR LEFT VAR ASSIGN . E SEMI BLIST SEMI VAR ASSIGN E RIGHT LCURL STLIST RCURL  (4)
+
+	VAR  shift 10
+	FLOAT_VAL  shift 11
+	INT_VAL  shift 12
+	LEFT  shift 13
+	.  error
+
+	E  goto 24
+	T  goto 15
+	F  goto 16
+
+
+state 18
+	E : E . PLUS T  (6)
+	E : E . MINUS T  (7)
+	F : LEFT E . RIGHT  (12)
+
+	PLUS  shift 19
+	MINUS  shift 20
+	RIGHT  shift 25
+	.  error
+
+
+state 19
+	E : E PLUS . T  (6)
+
+	VAR  shift 10
+	FLOAT_VAL  shift 11
+	INT_VAL  shift 12
+	LEFT  shift 13
+	.  error
+
+	T  goto 26
+	F  goto 16
+
+
+state 20
+	E : E MINUS . T  (7)
+
+	VAR  shift 10
+	FLOAT_VAL  shift 11
+	INT_VAL  shift 12
+	LEFT  shift 13
+	.  error
+
+	T  goto 27
+	F  goto 16
+
+
+state 21
+	ST : VAR ASSIGN E SEMI .  (5)
+
+	.  reduce 5
+
+
+state 22
+	T : T STAR . F  (9)
+
+	VAR  shift 10
+	FLOAT_VAL  shift 11
+	INT_VAL  shift 12
+	LEFT  shift 13
+	.  error
+
+	F  goto 28
+
+
+state 23
+	T : T DIV . F  (10)
+
+	VAR  shift 10
+	FLOAT_VAL  shift 11
+	INT_VAL  shift 12
+	LEFT  shift 13
+	.  error
+
+	F  goto 29
+
+
+state 24
+	ST : FOR LEFT VAR ASSIGN E . SEMI BLIST SEMI VAR ASSIGN E RIGHT LCURL STLIST RCURL  (4)
+	E : E . PLUS T  (6)
+	E : E . MINUS T  (7)
+
+	PLUS  shift 19
+	MINUS  shift 20
+	SEMI  shift 30
+	.  error
+
+
+state 25
+	F : LEFT E RIGHT .  (12)
+
+	.  reduce 12
+
+
+state 26
+	E : E PLUS T .  (6)
+	T : T . STAR F  (9)
+	T : T . DIV F  (10)
+
+	STAR  shift 22
+	DIV  shift 23
+	RELOP  reduce 6
+	PLUS  reduce 6
+	MINUS  reduce 6
+	OR  reduce 6
+	AND  reduce 6
+	SEMI  reduce 6
+	RIGHT  reduce 6
+
+
+state 27
+	E : E MINUS T .  (7)
+	T : T . STAR F  (9)
+	T : T . DIV F  (10)
+
+	STAR  shift 22
+	DIV  shift 23
+	RELOP  reduce 7
+	PLUS  reduce 7
+	MINUS  reduce 7
+	OR  reduce 7
+	AND  reduce 7
+	SEMI  reduce 7
+	RIGHT  reduce 7
+
+
+state 28
+	T : T STAR F .  (9)
+
+	.  reduce 9
+
+
+state 29
+	T : T DIV F .  (10)
+
+	.  reduce 10
+
+
+state 30
+	ST : FOR LEFT VAR ASSIGN E SEMI . BLIST SEMI VAR ASSIGN E RIGHT LCURL STLIST RCURL  (4)
+
+	VAR  shift 10
+	FLOAT_VAL  shift 11
+	INT_VAL  shift 12
+	LEFT  shift 13
+	.  error
+
+	E  goto 31
+	T  goto 15
+	F  goto 16
+	BLIST  goto 32
+	B  goto 33
+
+
+state 31
+	E : E . PLUS T  (6)
+	E : E . MINUS T  (7)
+	B : E . RELOP E  (19)
+
+	RELOP  shift 34
+	PLUS  shift 19
+	MINUS  shift 20
+	.  error
+
+
+state 32
+	ST : FOR LEFT VAR ASSIGN E SEMI BLIST . SEMI VAR ASSIGN E RIGHT LCURL STLIST RCURL  (4)
+	BLIST : BLIST . OR BLIST  (16)
+	BLIST : BLIST . AND BLIST  (17)
+
+	OR  shift 35
+	AND  shift 36
+	SEMI  shift 37
+	.  error
+
+
+state 33
+	BLIST : B .  (18)
+
+	.  reduce 18
+
+
+state 34
+	B : E RELOP . E  (19)
+
+	VAR  shift 10
+	FLOAT_VAL  shift 11
+	INT_VAL  shift 12
+	LEFT  shift 13
+	.  error
+
+	E  goto 38
+	T  goto 15
+	F  goto 16
+
+
+state 35
+	BLIST : BLIST OR . BLIST  (16)
+
+	VAR  shift 10
+	FLOAT_VAL  shift 11
+	INT_VAL  shift 12
+	LEFT  shift 13
+	.  error
+
+	E  goto 31
+	T  goto 15
+	F  goto 16
+	BLIST  goto 39
+	B  goto 33
+
+
+state 36
+	BLIST : BLIST AND . BLIST  (17)
+
+	VAR  shift 10
+	FLOAT_VAL  shift 11
+	INT_VAL  shift 12
+	LEFT  shift 13
+	.  error
+
+	E  goto 31
+	T  goto 15
+	F  goto 16
+	BLIST  goto 40
+	B  goto 33
+
+
+state 37
+	ST : FOR LEFT VAR ASSIGN E SEMI BLIST SEMI . VAR ASSIGN E RIGHT LCURL STLIST RCURL  (4)
+
+	VAR  shift 41
+	.  error
+
+
+state 38
+	E : E . PLUS T  (6)
+	E : E . MINUS T  (7)
+	B : E RELOP E .  (19)
+
+	PLUS  shift 19
+	MINUS  shift 20
+	OR  reduce 19
+	AND  reduce 19
+	SEMI  reduce 19
+
+
+state 39
+	BLIST : BLIST . OR BLIST  (16)
+	BLIST : BLIST OR BLIST .  (16)
+	BLIST : BLIST . AND BLIST  (17)
+
+	AND  shift 36
+	OR  reduce 16
+	SEMI  reduce 16
+
+
+state 40
+	BLIST : BLIST . OR BLIST  (16)
+	BLIST : BLIST . AND BLIST  (17)
+	BLIST : BLIST AND BLIST .  (17)
+
+	.  reduce 17
+
+
+state 41
+	ST : FOR LEFT VAR ASSIGN E SEMI BLIST SEMI VAR . ASSIGN E RIGHT LCURL STLIST RCURL  (4)
+
+	ASSIGN  shift 42
+	.  error
+
+
+state 42
+	ST : FOR LEFT VAR ASSIGN E SEMI BLIST SEMI VAR ASSIGN . E RIGHT LCURL STLIST RCURL  (4)
+
+	VAR  shift 10
+	FLOAT_VAL  shift 11
+	INT_VAL  shift 12
+	LEFT  shift 13
+	.  error
+
+	E  goto 43
+	T  goto 15
+	F  goto 16
+
+
+state 43
+	ST : FOR LEFT VAR ASSIGN E SEMI BLIST SEMI VAR ASSIGN E . RIGHT LCURL STLIST RCURL  (4)
+	E : E . PLUS T  (6)
+	E : E . MINUS T  (7)
+
+	PLUS  shift 19
+	MINUS  shift 20
+	RIGHT  shift 44
+	.  error
+
+
+state 44
+	ST : FOR LEFT VAR ASSIGN E SEMI BLIST SEMI VAR ASSIGN E RIGHT . LCURL STLIST RCURL  (4)
+
+	LCURL  shift 45
+	.  error
+
+
+state 45
+	ST : FOR LEFT VAR ASSIGN E SEMI BLIST SEMI VAR ASSIGN E RIGHT LCURL . STLIST RCURL  (4)
+	STLIST : .  (3)
+
+	FOR  shift 1
+	VAR  shift 2
+	RCURL  reduce 3
+
+	STLIST  goto 46
+	ST  goto 5
+
+
+state 46
+	ST : FOR LEFT VAR ASSIGN E SEMI BLIST SEMI VAR ASSIGN E RIGHT LCURL STLIST . RCURL  (4)
+
+	RCURL  shift 47
+	.  error
+
+
+state 47
+	ST : FOR LEFT VAR ASSIGN E SEMI BLIST SEMI VAR ASSIGN E RIGHT LCURL STLIST RCURL .  (4)
+
+	.  reduce 4
+
+
+19 terminals, 9 nonterminals
+20 grammar rules, 48 states
+
+grammar parser grammar
+symbol# value# symbol
+     0      0  $end
+     1    256  error
+     2    257  FOR
+     3    258  VAR
+     4    259  FLOAT_VAL
+     5    260  RELOP
+     6    261  INT_VAL
+     7    262  PLUS
+     8    263  MINUS
+     9    264  STAR
+    10    265  DIV
+    11    266  OR
+    12    267  AND
+    13    268  SEMI
+    14    269  LEFT
+    15    270  RIGHT
+    16    271  LCURL
+    17    272  RCURL
+    18    273  ASSIGN
+    19    274  $accept
+    20    275  CODE
+    21    276  STLIST
+    22    277  ST
+    23    278  E
+    24    279  T
+    25    280  F
+    26    281  BLIST
+    27    282  B

@@ -1,0 +1,9 @@
+while(a==b && c==d || e==f){
+    hi=hello+hi;
+}
+if(b==c){
+    a=b;
+}
+else{
+    c=d;
+}

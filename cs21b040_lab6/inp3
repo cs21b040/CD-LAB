@@ -1,0 +1,5 @@
+hi=a+b+c+d+e+f+g+h;
+hi=a-b-c-d-e-f-g-h;
+hi=a*b*c*d*e*f*g*h;
+hi=a/b/c/d/e/f/g/h;
+ans=3*(a++)+(b+c++);

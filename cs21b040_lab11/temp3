@@ -1,0 +1,13 @@
+int a,b,c,d,hi;
+switch(a+b+c+d){
+    case 11:
+    switch (a){
+    case 1:
+        hi=hi+1;
+        break;
+    default:
+        hi=hi+2;
+    }
+    default:
+        hi=hi+3;
+}

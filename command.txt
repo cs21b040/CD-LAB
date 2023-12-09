@@ -1,0 +1,1 @@
+tar -czvf cs21b040_lab4.tar.gz cs21b040_lab4/

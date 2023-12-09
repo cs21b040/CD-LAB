@@ -1,0 +1,7 @@
+if(a+b+c==d*e*f/g){
+    hi=hello+hello*99.00;
+}
+else{
+    hi=hello-hello*99.00;
+}
+temp=temp++;

@@ -1,0 +1,8 @@
+switch (x + y + z) {
+    case a + b:
+        hi = bye++;
+        break;
+    case c:
+        bye = bye + 1;
+        break;
+}

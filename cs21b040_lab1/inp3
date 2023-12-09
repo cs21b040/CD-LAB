@@ -1,0 +1,9 @@
+http://www.example.com:8080/path/to/resource?param1=value1&param2=value2
+https://secure.example.com/path/file.html
+ftp://ftp.example.com/files/file.txt
+mailto:contact@example.com
+file:///path/to/local/file.html
+https://leetcode.com/problems/find-xor-beauty-of-array/description/
+https://www.youtube.com/watch?v=X1rraxpM0GQ
+https://pavan:lexer@google.com:8080/file.txt
+htttps://google.com/

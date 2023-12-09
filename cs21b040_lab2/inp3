@@ -1,0 +1,23 @@
+#include <stdio.h>
+int fibonacci(int n) {
+    if (n <= 0) {
+        return 0; // Fibonacci of 0 is 0
+    } else if (n == 1) {
+        return 1; // Fibonacci of 1 is 1
+    } else {
+        // Recursively calculate the Fibonacci numbers
+        return fibonacci(n - 1) + fibonacci(n - 2);
+    }
+}
+
+int main() {
+    int n = 10; // Change this value to calculate a different Fibonacci number
+    int result = fibonacci(n);
+
+    /*
+        Print the calculated Fibonacci number for the given n.
+    */
+    printf("The %dth Fibonacci number is: %d\n", n, result);
+
+    return 0;
+}

@@ -1,0 +1,348 @@
+   0  $accept : CODE $end
+
+   1  CODE : STLIST
+
+   2  STLIST : ST STLIST
+   3         |
+
+   4  ST : VAR ASSIGN E SEMI
+   5     | VAR LEFT PARAMS RIGHT SEMI
+
+   6  PARAMS : VAR COMMA PARAMS
+   7         | VAR
+
+   8  E : E PLUS T
+   9    | E MINUS T
+  10    | T
+
+  11  T : T STAR F
+  12    | T DIV F
+  13    | F
+
+  14  F : LEFT E RIGHT
+  15    | INT_VAL
+  16    | VAR
+  17    | FLOAT_VAL
+
+state 0
+	$accept : . CODE $end  (0)
+	STLIST : .  (3)
+
+	VAR  shift 1
+	$end  reduce 3
+
+	CODE  goto 2
+	STLIST  goto 3
+	ST  goto 4
+
+
+state 1
+	ST : VAR . ASSIGN E SEMI  (4)
+	ST : VAR . LEFT PARAMS RIGHT SEMI  (5)
+
+	LEFT  shift 5
+	ASSIGN  shift 6
+	.  error
+
+
+state 2
+	$accept : CODE . $end  (0)
+
+	$end  accept
+
+
+state 3
+	CODE : STLIST .  (1)
+
+	.  reduce 1
+
+
+state 4
+	STLIST : ST . STLIST  (2)
+	STLIST : .  (3)
+
+	VAR  shift 1
+	$end  reduce 3
+
+	STLIST  goto 7
+	ST  goto 4
+
+
+state 5
+	ST : VAR LEFT . PARAMS RIGHT SEMI  (5)
+
+	VAR  shift 8
+	.  error
+
+	PARAMS  goto 9
+
+
+state 6
+	ST : VAR ASSIGN . E SEMI  (4)
+
+	VAR  shift 10
+	FLOAT_VAL  shift 11
+	INT_VAL  shift 12
+	LEFT  shift 13
+	.  error
+
+	E  goto 14
+	T  goto 15
+	F  goto 16
+
+
+state 7
+	STLIST : ST STLIST .  (2)
+
+	.  reduce 2
+
+
+state 8
+	PARAMS : VAR . COMMA PARAMS  (6)
+	PARAMS : VAR .  (7)
+
+	COMMA  shift 17
+	RIGHT  reduce 7
+
+
+state 9
+	ST : VAR LEFT PARAMS . RIGHT SEMI  (5)
+
+	RIGHT  shift 18
+	.  error
+
+
+state 10
+	F : VAR .  (16)
+
+	.  reduce 16
+
+
+state 11
+	F : FLOAT_VAL .  (17)
+
+	.  reduce 17
+
+
+state 12
+	F : INT_VAL .  (15)
+
+	.  reduce 15
+
+
+state 13
+	F : LEFT . E RIGHT  (14)
+
+	VAR  shift 10
+	FLOAT_VAL  shift 11
+	INT_VAL  shift 12
+	LEFT  shift 13
+	.  error
+
+	E  goto 19
+	T  goto 15
+	F  goto 16
+
+
+state 14
+	ST : VAR ASSIGN E . SEMI  (4)
+	E : E . PLUS T  (8)
+	E : E . MINUS T  (9)
+
+	PLUS  shift 20
+	MINUS  shift 21
+	SEMI  shift 22
+	.  error
+
+
+state 15
+	E : T .  (10)
+	T : T . STAR F  (11)
+	T : T . DIV F  (12)
+
+	STAR  shift 23
+	DIV  shift 24
+	PLUS  reduce 10
+	MINUS  reduce 10
+	SEMI  reduce 10
+	RIGHT  reduce 10
+
+
+state 16
+	T : F .  (13)
+
+	.  reduce 13
+
+
+state 17
+	PARAMS : VAR COMMA . PARAMS  (6)
+
+	VAR  shift 8
+	.  error
+
+	PARAMS  goto 25
+
+
+state 18
+	ST : VAR LEFT PARAMS RIGHT . SEMI  (5)
+
+	SEMI  shift 26
+	.  error
+
+
+state 19
+	E : E . PLUS T  (8)
+	E : E . MINUS T  (9)
+	F : LEFT E . RIGHT  (14)
+
+	PLUS  shift 20
+	MINUS  shift 21
+	RIGHT  shift 27
+	.  error
+
+
+state 20
+	E : E PLUS . T  (8)
+
+	VAR  shift 10
+	FLOAT_VAL  shift 11
+	INT_VAL  shift 12
+	LEFT  shift 13
+	.  error
+
+	T  goto 28
+	F  goto 16
+
+
+state 21
+	E : E MINUS . T  (9)
+
+	VAR  shift 10
+	FLOAT_VAL  shift 11
+	INT_VAL  shift 12
+	LEFT  shift 13
+	.  error
+
+	T  goto 29
+	F  goto 16
+
+
+state 22
+	ST : VAR ASSIGN E SEMI .  (4)
+
+	.  reduce 4
+
+
+state 23
+	T : T STAR . F  (11)
+
+	VAR  shift 10
+	FLOAT_VAL  shift 11
+	INT_VAL  shift 12
+	LEFT  shift 13
+	.  error
+
+	F  goto 30
+
+
+state 24
+	T : T DIV . F  (12)
+
+	VAR  shift 10
+	FLOAT_VAL  shift 11
+	INT_VAL  shift 12
+	LEFT  shift 13
+	.  error
+
+	F  goto 31
+
+
+state 25
+	PARAMS : VAR COMMA PARAMS .  (6)
+
+	.  reduce 6
+
+
+state 26
+	ST : VAR LEFT PARAMS RIGHT SEMI .  (5)
+
+	.  reduce 5
+
+
+state 27
+	F : LEFT E RIGHT .  (14)
+
+	.  reduce 14
+
+
+state 28
+	E : E PLUS T .  (8)
+	T : T . STAR F  (11)
+	T : T . DIV F  (12)
+
+	STAR  shift 23
+	DIV  shift 24
+	PLUS  reduce 8
+	MINUS  reduce 8
+	SEMI  reduce 8
+	RIGHT  reduce 8
+
+
+state 29
+	E : E MINUS T .  (9)
+	T : T . STAR F  (11)
+	T : T . DIV F  (12)
+
+	STAR  shift 23
+	DIV  shift 24
+	PLUS  reduce 9
+	MINUS  reduce 9
+	SEMI  reduce 9
+	RIGHT  reduce 9
+
+
+state 30
+	T : T STAR F .  (11)
+
+	.  reduce 11
+
+
+state 31
+	T : T DIV F .  (12)
+
+	.  reduce 12
+
+
+20 terminals, 8 nonterminals
+18 grammar rules, 32 states
+
+grammar parser grammar
+symbol# value# symbol
+     0      0  $end
+     1    256  error
+     2    257  FOR
+     3    258  VAR
+     4    259  FLOAT_VAL
+     5    260  RELOP
+     6    261  INT_VAL
+     7    262  PLUS
+     8    263  MINUS
+     9    264  STAR
+    10    265  DIV
+    11    266  OR
+    12    267  AND
+    13    268  SEMI
+    14    269  LEFT
+    15    270  RIGHT
+    16    271  LCURL
+    17    272  RCURL
+    18    273  ASSIGN
+    19    274  COMMA
+    20    275  $accept
+    21    276  CODE
+    22    277  STLIST
+    23    278  ST
+    24    279  E
+    25    280  T
+    26    281  F
+    27    282  PARAMS

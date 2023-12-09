@@ -1,0 +1,30 @@
+char a, b, c, d;
+switch (a + b){
+case 1:
+    switch (a+b){
+        case 1:
+            a=b;
+            break;
+        }
+    while(a<b){
+        a++;
+    }
+    break;
+case 'a':
+    if(a==b){
+        c=d;
+    }
+    if(a==b){
+        c=d;
+    }
+    else{
+        a=b;
+    }
+default:
+    if(a==b){
+        c=d;
+    }
+    else{
+        a=b;
+    }
+}

@@ -1,0 +1,1098 @@
+   0  $accept : START $end
+
+   1  START : STLIST
+
+   2  STLIST : STMT STLIST
+   3         | STMT
+
+   4  STMT : VAR ASSIGN E SEMI
+   5       | UNARY SEMI
+   6       | IF LPAREN BLIST RPAREN LCURL STLIST RCURL ELSE LCURL STLIST RCURL
+   7       | WHILE LPAREN BLIST RPAREN LCURL STLIST RCURL
+   8       | IF LPAREN BLIST RPAREN LCURL STLIST RCURL
+   9       | SWITCH LPAREN JEXPR RPAREN LCURL CASES RCURL
+
+  10  CASES : CASEBLK CASES
+  11        |
+
+  12  CASEBLK : CASE E COLON STLIST
+  13          | CASE E COLON STLIST BREAK SEMI
+  14          | DEFAULT COLON STLIST
+
+  15  JEXPR : E
+
+  16  BLIST : BLIST OR BLIST
+  17        | BLIST AND BLIST
+  18        | B
+
+  19  B : E RELOP E
+
+  20  E : E PLUS T
+  21    | E MINUS T
+  22    | T
+
+  23  T : T STAR F
+  24    | T DIV F
+  25    | F
+
+  26  F : MINUS R
+  27    | VARTEMP DECR
+  28    | DECR VARTEMP
+  29    | INCR VARTEMP
+  30    | VARTEMP INCR
+  31    | R
+
+  32  UNARY : VARTEMP DECR
+  33        | INCR VARTEMP
+  34        | VARTEMP INCR
+  35        | DECR VARTEMP
+
+  36  VARTEMP : VAR
+
+  37  R : LPAREN E RPAREN
+  38    | ID
+
+  39  ID : VAR
+  40     | FLOAT
+  41     | INT
+
+state 0
+	$accept : . START $end  (0)
+
+	VAR  shift 1
+	INCR  shift 2
+	DECR  shift 3
+	IF  shift 4
+	WHILE  shift 5
+	SWITCH  shift 6
+	.  error
+
+	START  goto 7
+	UNARY  goto 8
+	STLIST  goto 9
+	STMT  goto 10
+	VARTEMP  goto 11
+
+
+state 1
+	STMT : VAR . ASSIGN E SEMI  (4)
+	VARTEMP : VAR .  (36)
+
+	ASSIGN  shift 12
+	INCR  reduce 36
+	DECR  reduce 36
+
+
+state 2
+	UNARY : INCR . VARTEMP  (33)
+
+	VAR  shift 13
+	.  error
+
+	VARTEMP  goto 14
+
+
+state 3
+	UNARY : DECR . VARTEMP  (35)
+
+	VAR  shift 13
+	.  error
+
+	VARTEMP  goto 15
+
+
+state 4
+	STMT : IF . LPAREN BLIST RPAREN LCURL STLIST RCURL ELSE LCURL STLIST RCURL  (6)
+	STMT : IF . LPAREN BLIST RPAREN LCURL STLIST RCURL  (8)
+
+	LPAREN  shift 16
+	.  error
+
+
+state 5
+	STMT : WHILE . LPAREN BLIST RPAREN LCURL STLIST RCURL  (7)
+
+	LPAREN  shift 17
+	.  error
+
+
+state 6
+	STMT : SWITCH . LPAREN JEXPR RPAREN LCURL CASES RCURL  (9)
+
+	LPAREN  shift 18
+	.  error
+
+
+state 7
+	$accept : START . $end  (0)
+
+	$end  accept
+
+
+state 8
+	STMT : UNARY . SEMI  (5)
+
+	SEMI  shift 19
+	.  error
+
+
+state 9
+	START : STLIST .  (1)
+
+	.  reduce 1
+
+
+state 10
+	STLIST : STMT . STLIST  (2)
+	STLIST : STMT .  (3)
+
+	VAR  shift 1
+	INCR  shift 2
+	DECR  shift 3
+	IF  shift 4
+	WHILE  shift 5
+	SWITCH  shift 6
+	$end  reduce 3
+	RCURL  reduce 3
+	CASE  reduce 3
+	DEFAULT  reduce 3
+	BREAK  reduce 3
+
+	UNARY  goto 8
+	STLIST  goto 20
+	STMT  goto 10
+	VARTEMP  goto 11
+
+
+state 11
+	UNARY : VARTEMP . DECR  (32)
+	UNARY : VARTEMP . INCR  (34)
+
+	INCR  shift 21
+	DECR  shift 22
+	.  error
+
+
+state 12
+	STMT : VAR ASSIGN . E SEMI  (4)
+
+	VAR  shift 23
+	INCR  shift 24
+	DECR  shift 25
+	MINUS  shift 26
+	LPAREN  shift 27
+	INT  shift 28
+	FLOAT  shift 29
+	.  error
+
+	R  goto 30
+	ID  goto 31
+	E  goto 32
+	T  goto 33
+	F  goto 34
+	VARTEMP  goto 35
+
+
+state 13
+	VARTEMP : VAR .  (36)
+
+	.  reduce 36
+
+
+state 14
+	UNARY : INCR VARTEMP .  (33)
+
+	.  reduce 33
+
+
+state 15
+	UNARY : DECR VARTEMP .  (35)
+
+	.  reduce 35
+
+
+state 16
+	STMT : IF LPAREN . BLIST RPAREN LCURL STLIST RCURL ELSE LCURL STLIST RCURL  (6)
+	STMT : IF LPAREN . BLIST RPAREN LCURL STLIST RCURL  (8)
+
+	VAR  shift 23
+	INCR  shift 24
+	DECR  shift 25
+	MINUS  shift 26
+	LPAREN  shift 27
+	INT  shift 28
+	FLOAT  shift 29
+	.  error
+
+	B  goto 36
+	R  goto 30
+	ID  goto 31
+	E  goto 37
+	T  goto 33
+	F  goto 34
+	VARTEMP  goto 35
+	BLIST  goto 38
+
+
+state 17
+	STMT : WHILE LPAREN . BLIST RPAREN LCURL STLIST RCURL  (7)
+
+	VAR  shift 23
+	INCR  shift 24
+	DECR  shift 25
+	MINUS  shift 26
+	LPAREN  shift 27
+	INT  shift 28
+	FLOAT  shift 29
+	.  error
+
+	B  goto 36
+	R  goto 30
+	ID  goto 31
+	E  goto 37
+	T  goto 33
+	F  goto 34
+	VARTEMP  goto 35
+	BLIST  goto 39
+
+
+state 18
+	STMT : SWITCH LPAREN . JEXPR RPAREN LCURL CASES RCURL  (9)
+
+	VAR  shift 23
+	INCR  shift 24
+	DECR  shift 25
+	MINUS  shift 26
+	LPAREN  shift 27
+	INT  shift 28
+	FLOAT  shift 29
+	.  error
+
+	JEXPR  goto 40
+	R  goto 30
+	ID  goto 31
+	E  goto 41
+	T  goto 33
+	F  goto 34
+	VARTEMP  goto 35
+
+
+state 19
+	STMT : UNARY SEMI .  (5)
+
+	.  reduce 5
+
+
+state 20
+	STLIST : STMT STLIST .  (2)
+
+	.  reduce 2
+
+
+state 21
+	UNARY : VARTEMP INCR .  (34)
+
+	.  reduce 34
+
+
+state 22
+	UNARY : VARTEMP DECR .  (32)
+
+	.  reduce 32
+
+
+state 23
+	VARTEMP : VAR .  (36)
+	ID : VAR .  (39)
+
+	SEMI  reduce 39
+	RELOP  reduce 39
+	INCR  reduce 36
+	DECR  reduce 36
+	PLUS  reduce 39
+	MINUS  reduce 39
+	STAR  reduce 39
+	DIV  reduce 39
+	RPAREN  reduce 39
+	AND  reduce 39
+	OR  reduce 39
+	COLON  reduce 39
+
+
+state 24
+	F : INCR . VARTEMP  (29)
+
+	VAR  shift 13
+	.  error
+
+	VARTEMP  goto 42
+
+
+state 25
+	F : DECR . VARTEMP  (28)
+
+	VAR  shift 13
+	.  error
+
+	VARTEMP  goto 43
+
+
+state 26
+	F : MINUS . R  (26)
+
+	VAR  shift 44
+	LPAREN  shift 27
+	INT  shift 28
+	FLOAT  shift 29
+	.  error
+
+	R  goto 45
+	ID  goto 31
+
+
+state 27
+	R : LPAREN . E RPAREN  (37)
+
+	VAR  shift 23
+	INCR  shift 24
+	DECR  shift 25
+	MINUS  shift 26
+	LPAREN  shift 27
+	INT  shift 28
+	FLOAT  shift 29
+	.  error
+
+	R  goto 30
+	ID  goto 31
+	E  goto 46
+	T  goto 33
+	F  goto 34
+	VARTEMP  goto 35
+
+
+state 28
+	ID : INT .  (41)
+
+	.  reduce 41
+
+
+state 29
+	ID : FLOAT .  (40)
+
+	.  reduce 40
+
+
+state 30
+	F : R .  (31)
+
+	.  reduce 31
+
+
+state 31
+	R : ID .  (38)
+
+	.  reduce 38
+
+
+state 32
+	STMT : VAR ASSIGN E . SEMI  (4)
+	E : E . PLUS T  (20)
+	E : E . MINUS T  (21)
+
+	SEMI  shift 47
+	PLUS  shift 48
+	MINUS  shift 49
+	.  error
+
+
+state 33
+	E : T .  (22)
+	T : T . STAR F  (23)
+	T : T . DIV F  (24)
+
+	STAR  shift 50
+	DIV  shift 51
+	SEMI  reduce 22
+	RELOP  reduce 22
+	PLUS  reduce 22
+	MINUS  reduce 22
+	RPAREN  reduce 22
+	AND  reduce 22
+	OR  reduce 22
+	COLON  reduce 22
+
+
+state 34
+	T : F .  (25)
+
+	.  reduce 25
+
+
+state 35
+	F : VARTEMP . DECR  (27)
+	F : VARTEMP . INCR  (30)
+
+	INCR  shift 52
+	DECR  shift 53
+	.  error
+
+
+state 36
+	BLIST : B .  (18)
+
+	.  reduce 18
+
+
+state 37
+	B : E . RELOP E  (19)
+	E : E . PLUS T  (20)
+	E : E . MINUS T  (21)
+
+	RELOP  shift 54
+	PLUS  shift 48
+	MINUS  shift 49
+	.  error
+
+
+state 38
+	STMT : IF LPAREN BLIST . RPAREN LCURL STLIST RCURL ELSE LCURL STLIST RCURL  (6)
+	STMT : IF LPAREN BLIST . RPAREN LCURL STLIST RCURL  (8)
+	BLIST : BLIST . OR BLIST  (16)
+	BLIST : BLIST . AND BLIST  (17)
+
+	RPAREN  shift 55
+	AND  shift 56
+	OR  shift 57
+	.  error
+
+
+state 39
+	STMT : WHILE LPAREN BLIST . RPAREN LCURL STLIST RCURL  (7)
+	BLIST : BLIST . OR BLIST  (16)
+	BLIST : BLIST . AND BLIST  (17)
+
+	RPAREN  shift 58
+	AND  shift 56
+	OR  shift 57
+	.  error
+
+
+state 40
+	STMT : SWITCH LPAREN JEXPR . RPAREN LCURL CASES RCURL  (9)
+
+	RPAREN  shift 59
+	.  error
+
+
+state 41
+	JEXPR : E .  (15)
+	E : E . PLUS T  (20)
+	E : E . MINUS T  (21)
+
+	PLUS  shift 48
+	MINUS  shift 49
+	RPAREN  reduce 15
+
+
+state 42
+	F : INCR VARTEMP .  (29)
+
+	.  reduce 29
+
+
+state 43
+	F : DECR VARTEMP .  (28)
+
+	.  reduce 28
+
+
+state 44
+	ID : VAR .  (39)
+
+	.  reduce 39
+
+
+state 45
+	F : MINUS R .  (26)
+
+	.  reduce 26
+
+
+state 46
+	E : E . PLUS T  (20)
+	E : E . MINUS T  (21)
+	R : LPAREN E . RPAREN  (37)
+
+	PLUS  shift 48
+	MINUS  shift 49
+	RPAREN  shift 60
+	.  error
+
+
+state 47
+	STMT : VAR ASSIGN E SEMI .  (4)
+
+	.  reduce 4
+
+
+state 48
+	E : E PLUS . T  (20)
+
+	VAR  shift 23
+	INCR  shift 24
+	DECR  shift 25
+	MINUS  shift 26
+	LPAREN  shift 27
+	INT  shift 28
+	FLOAT  shift 29
+	.  error
+
+	R  goto 30
+	ID  goto 31
+	T  goto 61
+	F  goto 34
+	VARTEMP  goto 35
+
+
+state 49
+	E : E MINUS . T  (21)
+
+	VAR  shift 23
+	INCR  shift 24
+	DECR  shift 25
+	MINUS  shift 26
+	LPAREN  shift 27
+	INT  shift 28
+	FLOAT  shift 29
+	.  error
+
+	R  goto 30
+	ID  goto 31
+	T  goto 62
+	F  goto 34
+	VARTEMP  goto 35
+
+
+state 50
+	T : T STAR . F  (23)
+
+	VAR  shift 23
+	INCR  shift 24
+	DECR  shift 25
+	MINUS  shift 26
+	LPAREN  shift 27
+	INT  shift 28
+	FLOAT  shift 29
+	.  error
+
+	R  goto 30
+	ID  goto 31
+	F  goto 63
+	VARTEMP  goto 35
+
+
+state 51
+	T : T DIV . F  (24)
+
+	VAR  shift 23
+	INCR  shift 24
+	DECR  shift 25
+	MINUS  shift 26
+	LPAREN  shift 27
+	INT  shift 28
+	FLOAT  shift 29
+	.  error
+
+	R  goto 30
+	ID  goto 31
+	F  goto 64
+	VARTEMP  goto 35
+
+
+state 52
+	F : VARTEMP INCR .  (30)
+
+	.  reduce 30
+
+
+state 53
+	F : VARTEMP DECR .  (27)
+
+	.  reduce 27
+
+
+state 54
+	B : E RELOP . E  (19)
+
+	VAR  shift 23
+	INCR  shift 24
+	DECR  shift 25
+	MINUS  shift 26
+	LPAREN  shift 27
+	INT  shift 28
+	FLOAT  shift 29
+	.  error
+
+	R  goto 30
+	ID  goto 31
+	E  goto 65
+	T  goto 33
+	F  goto 34
+	VARTEMP  goto 35
+
+
+state 55
+	STMT : IF LPAREN BLIST RPAREN . LCURL STLIST RCURL ELSE LCURL STLIST RCURL  (6)
+	STMT : IF LPAREN BLIST RPAREN . LCURL STLIST RCURL  (8)
+
+	LCURL  shift 66
+	.  error
+
+
+state 56
+	BLIST : BLIST AND . BLIST  (17)
+
+	VAR  shift 23
+	INCR  shift 24
+	DECR  shift 25
+	MINUS  shift 26
+	LPAREN  shift 27
+	INT  shift 28
+	FLOAT  shift 29
+	.  error
+
+	B  goto 36
+	R  goto 30
+	ID  goto 31
+	E  goto 37
+	T  goto 33
+	F  goto 34
+	VARTEMP  goto 35
+	BLIST  goto 67
+
+
+state 57
+	BLIST : BLIST OR . BLIST  (16)
+
+	VAR  shift 23
+	INCR  shift 24
+	DECR  shift 25
+	MINUS  shift 26
+	LPAREN  shift 27
+	INT  shift 28
+	FLOAT  shift 29
+	.  error
+
+	B  goto 36
+	R  goto 30
+	ID  goto 31
+	E  goto 37
+	T  goto 33
+	F  goto 34
+	VARTEMP  goto 35
+	BLIST  goto 68
+
+
+state 58
+	STMT : WHILE LPAREN BLIST RPAREN . LCURL STLIST RCURL  (7)
+
+	LCURL  shift 69
+	.  error
+
+
+state 59
+	STMT : SWITCH LPAREN JEXPR RPAREN . LCURL CASES RCURL  (9)
+
+	LCURL  shift 70
+	.  error
+
+
+state 60
+	R : LPAREN E RPAREN .  (37)
+
+	.  reduce 37
+
+
+state 61
+	E : E PLUS T .  (20)
+	T : T . STAR F  (23)
+	T : T . DIV F  (24)
+
+	STAR  shift 50
+	DIV  shift 51
+	SEMI  reduce 20
+	RELOP  reduce 20
+	PLUS  reduce 20
+	MINUS  reduce 20
+	RPAREN  reduce 20
+	AND  reduce 20
+	OR  reduce 20
+	COLON  reduce 20
+
+
+state 62
+	E : E MINUS T .  (21)
+	T : T . STAR F  (23)
+	T : T . DIV F  (24)
+
+	STAR  shift 50
+	DIV  shift 51
+	SEMI  reduce 21
+	RELOP  reduce 21
+	PLUS  reduce 21
+	MINUS  reduce 21
+	RPAREN  reduce 21
+	AND  reduce 21
+	OR  reduce 21
+	COLON  reduce 21
+
+
+state 63
+	T : T STAR F .  (23)
+
+	.  reduce 23
+
+
+state 64
+	T : T DIV F .  (24)
+
+	.  reduce 24
+
+
+state 65
+	B : E RELOP E .  (19)
+	E : E . PLUS T  (20)
+	E : E . MINUS T  (21)
+
+	PLUS  shift 48
+	MINUS  shift 49
+	RPAREN  reduce 19
+	AND  reduce 19
+	OR  reduce 19
+
+
+state 66
+	STMT : IF LPAREN BLIST RPAREN LCURL . STLIST RCURL ELSE LCURL STLIST RCURL  (6)
+	STMT : IF LPAREN BLIST RPAREN LCURL . STLIST RCURL  (8)
+
+	VAR  shift 1
+	INCR  shift 2
+	DECR  shift 3
+	IF  shift 4
+	WHILE  shift 5
+	SWITCH  shift 6
+	.  error
+
+	UNARY  goto 8
+	STLIST  goto 71
+	STMT  goto 10
+	VARTEMP  goto 11
+
+
+state 67
+	BLIST : BLIST . OR BLIST  (16)
+	BLIST : BLIST . AND BLIST  (17)
+	BLIST : BLIST AND BLIST .  (17)
+
+	.  reduce 17
+
+
+state 68
+	BLIST : BLIST . OR BLIST  (16)
+	BLIST : BLIST OR BLIST .  (16)
+	BLIST : BLIST . AND BLIST  (17)
+
+	AND  shift 56
+	RPAREN  reduce 16
+	OR  reduce 16
+
+
+state 69
+	STMT : WHILE LPAREN BLIST RPAREN LCURL . STLIST RCURL  (7)
+
+	VAR  shift 1
+	INCR  shift 2
+	DECR  shift 3
+	IF  shift 4
+	WHILE  shift 5
+	SWITCH  shift 6
+	.  error
+
+	UNARY  goto 8
+	STLIST  goto 72
+	STMT  goto 10
+	VARTEMP  goto 11
+
+
+state 70
+	STMT : SWITCH LPAREN JEXPR RPAREN LCURL . CASES RCURL  (9)
+	CASES : .  (11)
+
+	CASE  shift 73
+	DEFAULT  shift 74
+	RCURL  reduce 11
+
+	CASES  goto 75
+	CASEBLK  goto 76
+
+
+state 71
+	STMT : IF LPAREN BLIST RPAREN LCURL STLIST . RCURL ELSE LCURL STLIST RCURL  (6)
+	STMT : IF LPAREN BLIST RPAREN LCURL STLIST . RCURL  (8)
+
+	RCURL  shift 77
+	.  error
+
+
+state 72
+	STMT : WHILE LPAREN BLIST RPAREN LCURL STLIST . RCURL  (7)
+
+	RCURL  shift 78
+	.  error
+
+
+state 73
+	CASEBLK : CASE . E COLON STLIST  (12)
+	CASEBLK : CASE . E COLON STLIST BREAK SEMI  (13)
+
+	VAR  shift 23
+	INCR  shift 24
+	DECR  shift 25
+	MINUS  shift 26
+	LPAREN  shift 27
+	INT  shift 28
+	FLOAT  shift 29
+	.  error
+
+	R  goto 30
+	ID  goto 31
+	E  goto 79
+	T  goto 33
+	F  goto 34
+	VARTEMP  goto 35
+
+
+state 74
+	CASEBLK : DEFAULT . COLON STLIST  (14)
+
+	COLON  shift 80
+	.  error
+
+
+state 75
+	STMT : SWITCH LPAREN JEXPR RPAREN LCURL CASES . RCURL  (9)
+
+	RCURL  shift 81
+	.  error
+
+
+state 76
+	CASES : CASEBLK . CASES  (10)
+	CASES : .  (11)
+
+	CASE  shift 73
+	DEFAULT  shift 74
+	RCURL  reduce 11
+
+	CASES  goto 82
+	CASEBLK  goto 76
+
+
+state 77
+	STMT : IF LPAREN BLIST RPAREN LCURL STLIST RCURL . ELSE LCURL STLIST RCURL  (6)
+	STMT : IF LPAREN BLIST RPAREN LCURL STLIST RCURL .  (8)
+
+	ELSE  shift 83
+	$end  reduce 8
+	VAR  reduce 8
+	INCR  reduce 8
+	DECR  reduce 8
+	IF  reduce 8
+	RCURL  reduce 8
+	WHILE  reduce 8
+	SWITCH  reduce 8
+	CASE  reduce 8
+	DEFAULT  reduce 8
+	BREAK  reduce 8
+
+
+state 78
+	STMT : WHILE LPAREN BLIST RPAREN LCURL STLIST RCURL .  (7)
+
+	.  reduce 7
+
+
+state 79
+	CASEBLK : CASE E . COLON STLIST  (12)
+	CASEBLK : CASE E . COLON STLIST BREAK SEMI  (13)
+	E : E . PLUS T  (20)
+	E : E . MINUS T  (21)
+
+	PLUS  shift 48
+	MINUS  shift 49
+	COLON  shift 84
+	.  error
+
+
+state 80
+	CASEBLK : DEFAULT COLON . STLIST  (14)
+
+	VAR  shift 1
+	INCR  shift 2
+	DECR  shift 3
+	IF  shift 4
+	WHILE  shift 5
+	SWITCH  shift 6
+	.  error
+
+	UNARY  goto 8
+	STLIST  goto 85
+	STMT  goto 10
+	VARTEMP  goto 11
+
+
+state 81
+	STMT : SWITCH LPAREN JEXPR RPAREN LCURL CASES RCURL .  (9)
+
+	.  reduce 9
+
+
+state 82
+	CASES : CASEBLK CASES .  (10)
+
+	.  reduce 10
+
+
+state 83
+	STMT : IF LPAREN BLIST RPAREN LCURL STLIST RCURL ELSE . LCURL STLIST RCURL  (6)
+
+	LCURL  shift 86
+	.  error
+
+
+state 84
+	CASEBLK : CASE E COLON . STLIST  (12)
+	CASEBLK : CASE E COLON . STLIST BREAK SEMI  (13)
+
+	VAR  shift 1
+	INCR  shift 2
+	DECR  shift 3
+	IF  shift 4
+	WHILE  shift 5
+	SWITCH  shift 6
+	.  error
+
+	UNARY  goto 8
+	STLIST  goto 87
+	STMT  goto 10
+	VARTEMP  goto 11
+
+
+state 85
+	CASEBLK : DEFAULT COLON STLIST .  (14)
+
+	.  reduce 14
+
+
+state 86
+	STMT : IF LPAREN BLIST RPAREN LCURL STLIST RCURL ELSE LCURL . STLIST RCURL  (6)
+
+	VAR  shift 1
+	INCR  shift 2
+	DECR  shift 3
+	IF  shift 4
+	WHILE  shift 5
+	SWITCH  shift 6
+	.  error
+
+	UNARY  goto 8
+	STLIST  goto 88
+	STMT  goto 10
+	VARTEMP  goto 11
+
+
+state 87
+	CASEBLK : CASE E COLON STLIST .  (12)
+	CASEBLK : CASE E COLON STLIST . BREAK SEMI  (13)
+
+	BREAK  shift 89
+	RCURL  reduce 12
+	CASE  reduce 12
+	DEFAULT  reduce 12
+
+
+state 88
+	STMT : IF LPAREN BLIST RPAREN LCURL STLIST RCURL ELSE LCURL STLIST . RCURL  (6)
+
+	RCURL  shift 90
+	.  error
+
+
+state 89
+	CASEBLK : CASE E COLON STLIST BREAK . SEMI  (13)
+
+	SEMI  shift 91
+	.  error
+
+
+state 90
+	STMT : IF LPAREN BLIST RPAREN LCURL STLIST RCURL ELSE LCURL STLIST RCURL .  (6)
+
+	.  reduce 6
+
+
+state 91
+	CASEBLK : CASE E COLON STLIST BREAK SEMI .  (13)
+
+	.  reduce 13
+
+
+28 terminals, 16 nonterminals
+42 grammar rules, 92 states
+
+grammar parser grammar
+symbol# value# symbol
+     0      0  $end
+     1    256  error
+     2    257  SEMI
+     3    258  ASSIGN
+     4    259  RELOP
+     5    260  VAR
+     6    261  INCR
+     7    262  DECR
+     8    263  PLUS
+     9    264  MINUS
+    10    265  STAR
+    11    266  DIV
+    12    267  LPAREN
+    13    268  RPAREN
+    14    269  IF
+    15    270  ELSE
+    16    271  LCURL
+    17    272  RCURL
+    18    273  AND
+    19    274  OR
+    20    275  WHILE
+    21    276  SWITCH
+    22    277  CASE
+    23    278  DEFAULT
+    24    279  COLON
+    25    280  BREAK
+    26    281  INT
+    27    282  FLOAT
+    28    283  $accept
+    29    284  START
+    30    285  JEXPR
+    31    286  CASES
+    32    287  B
+    33    288  R
+    34    289  ID
+    35    290  UNARY
+    36    291  STLIST
+    37    292  STMT
+    38    293  E
+    39    294  T
+    40    295  F
+    41    296  VARTEMP
+    42    297  BLIST
+    43    298  CASEBLK

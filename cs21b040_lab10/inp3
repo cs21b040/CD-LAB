@@ -1,0 +1,13 @@
+switch (choice) {
+    case 1+3:
+    a=b+c+d+e;
+        break;
+    case 2:
+    a=b+c+d+e;
+        break;
+    case 3:
+    a=b+c+d+e;
+        break;
+    default:
+    a=b+c+d+e;
+}

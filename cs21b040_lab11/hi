@@ -1,0 +1,5 @@
+int a,b,c,d;
+a=b+c;
+b=c-d;
+c=d*c;
+d=a/b;
